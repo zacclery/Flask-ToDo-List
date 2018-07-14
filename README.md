@@ -14,7 +14,7 @@ The project makes use of Python3, Flask, SQLite and Bootstrap.
 
 git clone https://Zacclery@bitbucket.org/Zacclery/todo_app.git && cd todo_app
 
-#### Create virtualenv
+##### Create virtualenv and activate
 
 pip3 install -r requirements.txt
 
