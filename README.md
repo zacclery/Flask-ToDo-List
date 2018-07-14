@@ -1,6 +1,6 @@
 # Todo
 
-A simple todo-list web application which provides the following functionality:
+A simple todo-list web application which provides the following functionality:  
 • A list of todos  
 • Create a new todo item  
 • Mark a todo item as done or undone  
