@@ -1,0 +1,6 @@
+venv/
+todo_backup.db
+.pytest_cache/
+__pycache__/
+app/__pycache__
+app/.pytest_cache/
