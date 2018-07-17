@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block content %}
 
 <!-- Todo bar -->
 <form action="/task" method="post">
@@ -19,9 +21,9 @@
     <td>
         <input type="checkbox" id="{{ task.id }}" name="content" {% if task.done %} checked {% endif %}>
     </td>
-
-    <td class="content" {% if task.done %} style="color:#8c8a8a" {% endif %}>
-      {% if task.done %} <strike> {% endif %} {{ task.content }} {% if task.done %} </strike> {% endif %}
+    
+    <td class="content task">
+      <label for="{{ task.id }}" class="{% if task.done %} done {% endif %}">{{ task.content }}</label>
     </td>
 
     <td align="right" >
@@ -72,7 +74,7 @@
   <tbody>
     <tr>
       <td>
-        <p>{{ (tasks|length) - (tasks|sum(attribute='done')) }} items left</p>
+        <p><span id="count">{{ (tasks|length) - (tasks|sum(attribute='done')) }}</span> items left</p>
       </td>
       <td class="complete"><a href="/finished">Mark all as completed</a></td>
     </tr>
@@ -82,11 +84,19 @@
 
 <script type="text/javascript">
 
+const count = {{ tasks|length }};
+
 $(function() {
-  $(":checkbox").click(function(){
-    $.post("/toggle", {"task_id": this.id})
-    // Total hack
-    setTimeout(location.reload.bind(location), 300);
+  $(":checkbox").click(function(e){
+    e.preventDefault();
+    var task = e.target;
+    $.post("/toggle", {"task_id": task.id}).done(function() {
+      task.checked = !task.checked;
+      $('label[for='+task.id+']').toggleClass('done');
+      $('#count').text(count - $(':checked').length);
+    }).fail(function() {
+      alert('oops');
+    });
   });
 });
 
