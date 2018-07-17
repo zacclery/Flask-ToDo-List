@@ -7,7 +7,6 @@ class Task(db.Model):
 
     def __init__(self, content):
         self.content = content
-        self.done = False
 
     def __repr__(self):
-        return '<Content %s>' % self.content
+        return f'<Task {self.id}: {self.done}>'

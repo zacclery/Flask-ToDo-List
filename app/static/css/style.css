@@ -9,3 +9,8 @@ table{
 .complete{
   float:right;
 }
+
+.done {
+  text-decoration: line-through;
+  color: #8c8a8a
+}

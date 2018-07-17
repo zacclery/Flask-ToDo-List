@@ -28,7 +28,7 @@ def toggle_status():
     task = Task.query.get(task_id)
     task.done = not task.done
     db.session.commit()
-    return redirect('/')
+    return str(task), 200
 
 
 @app.route('/edit', methods=['POST'])
@@ -60,5 +60,5 @@ def resolve_tasks():
             return redirect('/')
         if not task.done:
             task.done = True
-        db.session.commit()
+    db.session.commit()
     return redirect('/')
