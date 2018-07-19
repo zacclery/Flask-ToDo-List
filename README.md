@@ -8,11 +8,11 @@ A simple todo-list web application which provides the following functionality:
 • Delete a todo item  
 • Mark everything as completed  
 
-The project makes use of Python3, Flask, SQLite and Bootstrap.
+The project makes use of Python3, Flask, SQLite, Bootstrap and JQuery.
 
 ## Getting Started
 
-git clone https://Zacclery@bitbucket.org/Zacclery/todo_app.git && cd todo_app
+git clone https://github.com/zacclery/Flask-ToDo-List.git && cd todo_app
 
 ##### Create virtualenv and activate
 
