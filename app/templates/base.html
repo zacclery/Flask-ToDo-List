@@ -1,7 +1,14 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#6c5ce7">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -9,18 +16,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
-  <title>Todos</title>
-
+  <title>Today - Task Manager</title>
 </head>
 
-<body class="container">
-
-  <h1>Todos</h1>
-
-  <hr>
-
-  {% block content %}{% endblock %}
-
+<body>
+  <main class="app-shell">
+    {% block content %}{% endblock %}
+  </main>
 </body>
 
 </html>
