@@ -2,89 +2,105 @@
 
 {% block content %}
 
-<!-- Todo bar -->
-<form action="/task" method="post">
-  <div class="input-group mb-3">
-    <input type="text" class="form-control" name="content" placeholder="What do you want to do today?">
-    <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="submit">Add Task</button>
-    </div>
+<header class="app-header">
+  <div>
+    <p class="eyebrow">My workspace</p>
+    <h1>Today</h1>
   </div>
+  <div class="date-badge" id="today-date"></div>
+</header>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="flash-message" role="alert">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<form action="/task" method="post" class="task-form">
+  <label class="sr-only" for="new-task">Add a new task</label>
+  <input type="text" id="new-task" name="content" placeholder="What needs to be done?" autocomplete="off" required>
+  <button type="submit" aria-label="Add task">
+    <span aria-hidden="true">+</span>
+    <span>Add task</span>
+  </button>
 </form>
 
+<section class="task-card" aria-label="Task list">
+  {% if tasks %}
+    <div class="task-list">
+      {% for task in tasks %}
+      <article class="task-row" id="task-row-{{ task.id }}">
+        <label class="task-check">
+          <input type="checkbox" id="{{ task.id }}" name="content" {% if task.done %} checked {% endif %}>
+          <span class="custom-check" aria-hidden="true"></span>
+        </label>
 
-<!-- Main table -->
-<table class="table-hover">
-  {% for task in tasks %}
-  <tr>
+        <label for="{{ task.id }}" class="task-content {% if task.done %}done{% endif %}">
+          {{ task.content }}
+        </label>
 
-    <td>
-        <input type="checkbox" id="{{ task.id }}" name="content" {% if task.done %} checked {% endif %}>
-    </td>
-    
-    <td class="content task">
-      <label for="{{ task.id }}" class="{% if task.done %} done {% endif %}">{{ task.content }}</label>
-    </td>
+        <div class="task-actions">
+          <button type="button" class="icon-button edit" data-toggle="modal" data-target="#edit_modal_{{ task.id }}" aria-label="Edit {{ task.content }}" title="Edit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16v4Zm9.5-13.5 4 4"/></svg>
+          </button>
+          <a href="/delete/{{ task.id }}" class="icon-button delete" aria-label="Delete {{ task.content }}" title="Delete">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m2 0-1 14H7L6 6m4 4v6m4-6v6"/></svg>
+          </a>
+        </div>
 
-    <td align="right" >
-      <span><a data-toggle="modal" class="edit" href="#edit_modal_{{ task.id }}">Edit</a></span>
-    </td>
-
-    <td align="right">
-      <span><a href="/delete/{{ task.id }}"><button type="button" class="btn btn-primary">X</button></a></span>
-    </td>
-
-    <!-- Edit Modal -->
-    <form action="/edit" method="post">
-
-      <div class="modal fade" id="edit_modal_{{task.id}}" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <h5 class="modal-title">Edit Task</h5>
-              <input name="task_id" type="hidden" value="{{task.id}}">
-            </div>
-
-            <div class="modal-body">
-              <div class="input-group input-group-sm mb-3">
-                <input type="text" class="form-control" aria-label="Small" name="edit_text" aria-describedby="inputGroup-sizing-sm" value="{{ task.content }}">
+        <form action="/edit" method="post">
+          <div class="modal fade" id="edit_modal_{{task.id}}" tabindex="-1" role="dialog" aria-labelledby="edit-title-{{task.id}}">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content edit-modal">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="edit-title-{{task.id}}">Edit task</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                  <input name="task_id" type="hidden" value="{{task.id}}">
+                </div>
+                <div class="modal-body">
+                  <input type="text" class="edit-input" name="edit_text" value="{{ task.content }}" required>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="secondary-button" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="primary-button">Save changes</button>
+                </div>
               </div>
             </div>
-
-            <div class="modal-footer">
-              <input type="submit" class="btn btn-primary" value="Ok">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-
           </div>
-        </div>
+        </form>
+      </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M8 5h11M8 12h11M8 19h11M4 5h.01M4 12h.01M4 19h.01"/></svg>
       </div>
+      <h2>Your list is clear</h2>
+      <p>Add a task above and make progress today.</p>
+    </div>
+  {% endif %}
+</section>
 
-    </form>
-
-  </tr>
-  {% endfor %}
-</table>
-
-<hr>
-
-<!-- Footer -->
-<table>
-  <tbody>
-    <tr>
-      <td>
-        <p><span id="count">{{ (tasks|length) - (tasks|sum(attribute='done')) }}</span> items left</p>
-      </td>
-      <td class="complete"><a href="/finished">Mark all as completed</a></td>
-    </tr>
-  </tbody>
-</table>
+<footer class="task-footer">
+  <p><strong id="count">{{ (tasks|length) - (tasks|sum(attribute='done')) }}</strong> items left</p>
+  {% if tasks %}
+    <a href="/finished" class="complete-all">Mark all as completed</a>
+  {% endif %}
+</footer>
 
 
 <script type="text/javascript">
 
 const count = {{ tasks|length }};
+
+const dateElement = document.getElementById('today-date');
+dateElement.textContent = new Intl.DateTimeFormat('en', {
+  month: 'short',
+  day: 'numeric'
+}).format(new Date());
 
 $(function() {
   $(":checkbox").click(function(e){

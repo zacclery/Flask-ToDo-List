@@ -1,6 +1,15 @@
-venv/
-todo_backup.db
-.pytest_cache/
+# Python virtual environment
+.venv/
+
+# Python cache
 __pycache__/
-app/__pycache__
-app/.pytest_cache/
+*.pyc
+
+# Local database and instance files
+instance/
+
+# Environment variables
+.env
+
+# IDE files
+.vscode/
